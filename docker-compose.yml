@@ -1,0 +1,77 @@
+version: "3.9"
+
+services:
+  neo4j:
+    image: neo4j:5.24
+    container_name: fintrace-neo4j
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: neo4j/StrongPass123
+      NEO4J_dbms_memory_pagecache_size: 512M
+      NEO4J_dbms_memory_heap_max__size: 512M
+      NEO4JLABS_PLUGINS: '["apoc"]'
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+
+  backend:
+    build:
+      context: ./backend
+    container_name: fintrace-backend
+    depends_on:
+      - neo4j
+    environment:
+      SERVER_PORT: 8080
+      GRAPH_URI: bolt://neo4j:7687
+      GRAPH_USERNAME: neo4j
+      GRAPH_PASSWORD: StrongPass123
+      GRAPH_DATABASE: neo4j
+      LOG_LEVEL: info
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8080
+    container_name: fintrace-frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
+  datagen:
+    build:
+      context: ./backend
+    container_name: fintrace-datagen
+    command: ["/app/datagen", "--users", "10000", "--transactions", "100000", "--output-dir", "/seed-data"]
+    profiles:
+      - seed
+    volumes:
+      - ./seed-data:/seed-data
+
+  ingest:
+    build:
+      context: ./backend
+    container_name: fintrace-ingest
+    command: ["/app/ingest", "--dataset-dir", "/seed-data", "--workers", "16"]
+    depends_on:
+      - neo4j
+    environment:
+      GRAPH_URI: bolt://neo4j:7687
+      GRAPH_USERNAME: neo4j
+      GRAPH_PASSWORD: StrongPass123
+      GRAPH_DATABASE: neo4j
+      LOG_LEVEL: info
+    volumes:
+      - ./seed-data:/seed-data
+    profiles:
+      - seed
+
+volumes:
+  neo4j-data:
+  neo4j-logs:
