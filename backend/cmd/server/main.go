@@ -12,7 +12,9 @@ import (
 	"github.com/vanshika/fintrace/backend/internal/config"
 	"github.com/vanshika/fintrace/backend/internal/graph"
 	"github.com/vanshika/fintrace/backend/internal/logging"
+	"github.com/vanshika/fintrace/backend/internal/repository"
 	"github.com/vanshika/fintrace/backend/internal/server"
+	"github.com/vanshika/fintrace/backend/internal/service"
 )
 
 func main() {
@@ -39,8 +41,13 @@ func main() {
 		}
 	}()
 
+	repo := repository.New(graphClient)
+	relationshipService := service.NewRelationshipService(repo, nil)
+	apiHandlers := server.NewAPIHandlers(logger, relationshipService)
+
 	router := server.NewRouter(logger, server.RouterDependencies{
 		Health: server.GraphHealthService{Client: graphClient},
+		API:    apiHandlers,
 	})
 
 	srv := server.New(logger, cfg.HTTP, router)

@@ -48,7 +48,14 @@ services:
     build:
       context: ./backend
     container_name: fintrace-datagen
-    command: ["/app/datagen", "--users", "10000", "--transactions", "100000", "--output-dir", "/seed-data"]
+    entrypoint: ["/app/datagen"]
+    command:
+      - "--users"
+      - "10000"
+      - "--transactions"
+      - "100000"
+      - "--output-dir"
+      - "/seed-data"
     profiles:
       - seed
     volumes:
@@ -58,7 +65,12 @@ services:
     build:
       context: ./backend
     container_name: fintrace-ingest
-    command: ["/app/ingest", "--dataset-dir", "/seed-data", "--workers", "16"]
+    entrypoint: ["/app/ingest"]
+    command:
+      - "--dataset-dir"
+      - "/seed-data"
+      - "--workers"
+      - "16"
     depends_on:
       - neo4j
     environment:
