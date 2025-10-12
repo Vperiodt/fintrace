@@ -4,15 +4,6 @@
 
 Fintrace is a full-stack prototype for analysing relationships between users and transactions in a financial graph. The backend exposes REST APIs to ingest data, detect direct and indirect relationships, and run lightweight analytics (like shortest-path). The frontend renders searchable lists and an interactive graph explorer powered by Cytoscape. Synthetic data generation and container orchestration are provided to support rapid demos with 100k+ transactions.
 
-## Architecture
-
-- **Backend:** Go service exposing REST endpoints, backed by AWS Neptune or Neo4j (via Bolt/openCypher). Repository layer manages graph mutations and queries, while a relationship engine normalises attributes and derives links.
-- **Frontend:** React + Vite SPA with Cytoscape visualisation, calling the backend APIs.
-- **Graph DB:** AWS Neptune in production; Neo4j Docker container for local development.
-- **Data generator:** Go CLI to synthesize deterministic user/transaction datasets.
-
-Detailed schema diagrams live in `docs/architecture.md`.
-
 ## Getting Started
 
 ### Prerequisites
@@ -113,18 +104,3 @@ Outputs:
   - `go test -run=^$ -bench=. -benchmem ./...`
   - `go tool pprof http://localhost:8080/debug/pprof/profile?seconds=30`
 
-## Interview / Demo Talking Points
-
-1. **Graph-aware ingestion pipeline:** Attribute normalisation + confidence scoring ensures deterministic shared-link edges.
-2. **Analytics extensibility:** The repository abstracts graph queries so shortest-path or clustering endpoints can be added without touching handlers.
-3. **Operational readiness:** Docker Compose + datagen service allow one-command demo environments with 100k transactions.
-4. **Frontend UX:** Filtering + Cytoscape overlays demonstrate quick investigative workflows (suspect user → edges → linked transactions).
-5. **Scalability considerations:** Discuss tuning Neo4j connection pools, bulk loader usage for Neptune, and paginated exports to avoid memory pressure.
-
-## Additional Documentation
-
-- `docs/architecture.md`
-- `docs/manual-testing.md`
-- `docs/runbook.md`
-
-Feel free to reach out if you need deeper dives on Neptune-specific deployment or to extend analytics (e.g., community detection, clustering).
