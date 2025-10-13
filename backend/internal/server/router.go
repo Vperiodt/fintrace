@@ -11,6 +11,7 @@ import (
 // RouterDependencies collects handler dependencies.
 type RouterDependencies struct {
 	Health HealthService
+	API    *APIHandlers
 }
 
 // NewRouter wires the HTTP routes exposed by the backend API.
@@ -37,6 +38,16 @@ func NewRouter(logger *slog.Logger, deps RouterDependencies) http.Handler {
 
 		respondJSON(w, status, payload)
 	})
+
+	if deps.API != nil {
+		mux.HandleFunc("/users", deps.API.handleUsers)
+		mux.HandleFunc("/transactions", deps.API.handleTransactions)
+		mux.HandleFunc("/relationships/user/", deps.API.handleUserRelationships)
+		mux.HandleFunc("/relationships/transaction/", deps.API.handleTransactionRelationships)
+		mux.HandleFunc("/analytics/shortest-path", deps.API.handleShortestPath)
+		mux.HandleFunc("/export/users", deps.API.handleExportUsers)
+		mux.HandleFunc("/export/transactions", deps.API.handleExportTransactions)
+	}
 
 	return loggingMiddleware(logger, mux)
 }

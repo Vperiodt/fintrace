@@ -1,0 +1,7 @@
+.git
+bin
+docs
+frontend
+tmp
+.cache
+node_modules

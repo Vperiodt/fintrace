@@ -57,7 +57,7 @@ Seed files will land in `./seed-data`.
 Then ingest the dataset into Neo4j (the command wires itself up to the running compose stack):
 
 ```bash
-docker compose run --rm --profile seed ingest
+docker compose --profile seed run --rm ingest
 ```
 
 Once the CLI reports `ingestion complete`, the `backend` API and React tables can page through the full 100k transactions straight away—filters and sorts operate server-side, so the UI stays responsive even at that scale.
