@@ -69,17 +69,3 @@ curl -s "http://localhost:8080/relationships/user/USR-DEMO-1" | jq
 curl -s "http://localhost:8080/relationships/transaction/TX-DEMO-1" | jq
 ```
 
-> You can create users and transactions via the dashboard forms or directly with the API (e.g. curl/Postman) if you prefer scripting.
-
-## API Reference (Summary)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/users` | Upsert user + shared attributes |
-| `GET`  | `/users` | Paginated list; filters on search, KYC, risk, geography, and email domain |
-| `POST` | `/transactions` | Upsert transaction + relationship edges |
-| `GET`  | `/transactions` | Paginated list; filters on status, type, channel, amount, time window |
-| `GET`  | `/relationships/user/{id}` | User-centric relationships |
-| `GET`  | `/relationships/transaction/{id}` | Transaction-centric relationships |
-
-All list endpoints support `page`, `pageSize` (<=200), `sortField`, and `sortOrder`.
