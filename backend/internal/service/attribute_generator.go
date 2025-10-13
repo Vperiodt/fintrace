@@ -40,18 +40,23 @@ func (DefaultAttributeGenerator) FromUser(input UserInput) []domain.Attribute {
 		})
 	}
 
+	seenPaymentIdentifiers := make(map[string]struct{})
 	for _, pm := range input.PaymentMethods {
-		if pm.Fingerprint == "" {
+		identifier := strings.TrimSpace(pm.Fingerprint)
+		if identifier == "" {
+			identifier = strings.TrimSpace(pm.ID)
+		}
+		if identifier == "" {
 			continue
 		}
-		fingerprint := strings.TrimSpace(pm.Fingerprint)
-		if fingerprint == "" {
+		if _, exists := seenPaymentIdentifiers[identifier]; exists {
 			continue
 		}
+		seenPaymentIdentifiers[identifier] = struct{}{}
 		attrs = append(attrs, domain.Attribute{
 			Type:            AttributeTypePayment,
-			Value:           hashValue(fingerprint),
-			RawValue:        fingerprint,
+			Value:           hashValue(identifier),
+			RawValue:        identifier,
 			ConfidenceScore: 0.95,
 		})
 	}
