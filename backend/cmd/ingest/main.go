@@ -29,7 +29,7 @@ func main() {
 		datasetDir   = flag.String("dataset-dir", "./seed-data", "Directory containing users.json and transactions.json")
 		usersPath    = flag.String("users", "", "Path to users.json (overrides dataset-dir)")
 		transactions = flag.String("transactions", "", "Path to transactions.json (overrides dataset-dir)")
-		workers      = flag.Int("workers", 8, "Number of concurrent workers for ingestion")
+		workers      = flag.Int("workers", 4, "Number of concurrent workers for ingestion")
 	)
 	flag.Parse()
 

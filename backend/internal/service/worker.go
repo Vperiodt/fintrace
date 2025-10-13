@@ -3,7 +3,11 @@ package service
 import (
 	"context"
 	"errors"
+	"strings"
 	"sync"
+	"time"
+
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 // TaskError accumulates multiple errors produced during bulk ingestion.
@@ -59,15 +63,65 @@ func NewBulkIngestor(service *RelationshipService, workers int) *BulkIngestor {
 // IngestUsers processes the provided user inputs concurrently.
 func (bi *BulkIngestor) IngestUsers(ctx context.Context, users []UserInput) error {
 	return bi.run(ctx, len(users), func(idx int) error {
-		return bi.service.UpsertUser(ctx, users[idx])
+		return bi.withRetry(ctx, func() error {
+			return bi.service.UpsertUser(ctx, users[idx])
+		})
 	})
 }
 
 // IngestTransactions processes transaction inputs concurrently.
 func (bi *BulkIngestor) IngestTransactions(ctx context.Context, txs []TransactionInput) error {
 	return bi.run(ctx, len(txs), func(idx int) error {
-		return bi.service.UpsertTransaction(ctx, txs[idx])
+		return bi.withRetry(ctx, func() error {
+			return bi.service.UpsertTransaction(ctx, txs[idx])
+		})
 	})
+}
+
+const (
+	maxRetryAttempts   = 5
+	initialBackoff     = 200 * time.Millisecond
+	backoffMultiplier  = 1.8
+	maxBackoffDuration = 2 * time.Second
+)
+
+func (bi *BulkIngestor) withRetry(ctx context.Context, op func() error) error {
+	backoff := initialBackoff
+	for attempt := 0; attempt <= maxRetryAttempts; attempt++ {
+		err := op()
+		if err == nil {
+			return nil
+		}
+		if attempt == maxRetryAttempts || !isRetryableError(err) {
+			return err
+		}
+
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-time.After(backoff):
+		}
+
+		next := time.Duration(float64(backoff) * backoffMultiplier)
+		if next > maxBackoffDuration {
+			next = maxBackoffDuration
+		}
+		backoff = next
+	}
+	return nil
+}
+
+func isRetryableError(err error) bool {
+	var neoErr *neo4j.Neo4jError
+	if errors.As(err, &neoErr) {
+		if neoErr.Code == "Neo.TransientError.Transaction.DeadlockDetected" {
+			return true
+		}
+		if strings.HasPrefix(neoErr.Code, "Neo.TransientError.") {
+			return true
+		}
+	}
+	return false
 }
 
 func (bi *BulkIngestor) run(ctx context.Context, total int, workerFn func(idx int) error) error {
