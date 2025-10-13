@@ -69,7 +69,7 @@ curl -s "http://localhost:8080/relationships/user/USR-DEMO-1" | jq
 curl -s "http://localhost:8080/relationships/transaction/TX-DEMO-1" | jq
 ```
 
-> The create/update endpoints (`POST /users`, `POST /transactions`) are API-only; there isn’t a UI form. Use `curl`, Postman, or any HTTP client to send JSON payloads.
+> You can create users and transactions via the dashboard forms or directly with the API (e.g. curl/Postman) if you prefer scripting.
 
 ## API Reference (Summary)
 

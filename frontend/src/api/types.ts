@@ -93,6 +93,63 @@ export interface TransactionRelationshipsResponse {
   linkedTransactions: LinkedTransaction[];
 }
 
+export interface AddressInput {
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+
+export interface PaymentMethodInput {
+  paymentMethodId: string;
+  methodType: string;
+  provider: string;
+  masked?: string;
+  fingerprint: string;
+  firstUsedAt?: string;
+  lastUsedAt?: string;
+}
+
+export interface CreateUserRequest {
+  userId: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  address: AddressInput;
+  dateOfBirth?: string;
+  kycStatus: string;
+  riskScore: number;
+  paymentMethods?: PaymentMethodInput[];
+  attributes?: Array<Record<string, unknown>>;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CreateTransactionRequest {
+  transactionId: string;
+  senderUserId: string;
+  receiverUserId: string;
+  amount: number;
+  currency: string;
+  type: string;
+  status: string;
+  channel: string;
+  ipAddress?: string;
+  deviceId?: string;
+  paymentMethodId?: string;
+  timestamp: string;
+  metadata?: Record<string, unknown>;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface StatusResponse {
+  status: string;
+  id: string;
+}
+
 export interface UsersQuery {
   page: number;
   pageSize: number;

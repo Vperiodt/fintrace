@@ -4,7 +4,10 @@ import {
   UsersResponse,
   TransactionsResponse,
   UserRelationshipsResponse,
-  TransactionRelationshipsResponse
+  TransactionRelationshipsResponse,
+  CreateUserRequest,
+  CreateTransactionRequest,
+  StatusResponse
 } from "./types";
 
 const rawApiBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim();
@@ -129,6 +132,28 @@ export const api = {
     return fetchJSON<TransactionRelationshipsResponse>(
       toURL(`/relationships/transaction/${encodeURIComponent(transactionId)}`)
     );
+  },
+
+  createUser: async (payload: CreateUserRequest): Promise<StatusResponse> => {
+    return fetchJSON<StatusResponse>(toURL("/users"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+  },
+
+  createTransaction: async (
+    payload: CreateTransactionRequest
+  ): Promise<StatusResponse> => {
+    return fetchJSON<StatusResponse>(toURL("/transactions"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
   }
 };
 
