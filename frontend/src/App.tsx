@@ -64,17 +64,12 @@ function App() {
     email: "",
     phone: "",
     kycStatus: "VERIFIED",
-    riskScore: "",
+    riskScore: "0.35",
     addressLine1: "",
-    addressLine2: "",
     addressCity: "",
     addressState: "",
     addressPostalCode: "",
-    addressCountry: "US",
-    paymentMethodId: "",
-    paymentMethodProvider: "",
-    paymentMethodMasked: "",
-    paymentMethodFingerprint: ""
+    addressCountry: "US"
   });
 
   const makeInitialTransactionForm = () => ({
@@ -426,7 +421,8 @@ function App() {
       setUserCreateError("Full name is required.");
       return;
     }
-    const risk = Number(userForm.riskScore);
+    const riskValue = userForm.riskScore.trim();
+    const risk = riskValue === "" ? 0 : Number(riskValue);
     if (Number.isNaN(risk) || risk < 0 || risk > 1) {
       setUserCreateError("Risk score must be between 0 and 1.");
       return;
@@ -440,7 +436,6 @@ function App() {
       phone: userForm.phone.trim(),
       address: {
         line1: userForm.addressLine1.trim(),
-        line2: userForm.addressLine2.trim(),
         city: userForm.addressCity.trim(),
         state: userForm.addressState.trim(),
         postalCode: userForm.addressPostalCode.trim(),
@@ -451,22 +446,6 @@ function App() {
       createdAt: nowIso,
       updatedAt: nowIso
     } as CreateUserRequest;
-
-    const paymentFingerprint = userForm.paymentMethodFingerprint.trim();
-    const paymentId = userForm.paymentMethodId.trim();
-    if (paymentFingerprint && paymentId) {
-      payload.paymentMethods = [
-        {
-          paymentMethodId: paymentId,
-          methodType: "CARD",
-          provider: userForm.paymentMethodProvider.trim() || "CARD",
-          masked: userForm.paymentMethodMasked.trim() || undefined,
-          fingerprint: paymentFingerprint,
-          firstUsedAt: nowIso,
-          lastUsedAt: nowIso
-        }
-      ];
-    }
 
     try {
       await api.createUser(payload);
@@ -660,16 +639,6 @@ function App() {
                 />
               </label>
               <label>
-                Line 2
-                <input
-                  type="text"
-                  value={userForm.addressLine2}
-                  onChange={(event) =>
-                    setUserForm((prev) => ({ ...prev, addressLine2: event.target.value }))
-                  }
-                />
-              </label>
-              <label>
                 City
                 <input
                   type="text"
@@ -716,64 +685,6 @@ function App() {
                 />
               </label>
             </div>
-
-            <details className="optional-block">
-              <summary>Optional payment method</summary>
-              <div className="form-grid">
-                <label>
-                  Payment method ID
-                  <input
-                    type="text"
-                    value={userForm.paymentMethodId}
-                    onChange={(event) =>
-                      setUserForm((prev) => ({
-                        ...prev,
-                        paymentMethodId: event.target.value
-                      }))
-                    }
-                  />
-                </label>
-                <label>
-                  Provider
-                  <input
-                    type="text"
-                    value={userForm.paymentMethodProvider}
-                    onChange={(event) =>
-                      setUserForm((prev) => ({
-                        ...prev,
-                        paymentMethodProvider: event.target.value
-                      }))
-                    }
-                  />
-                </label>
-                <label>
-                  Masked PAN
-                  <input
-                    type="text"
-                    value={userForm.paymentMethodMasked}
-                    onChange={(event) =>
-                      setUserForm((prev) => ({
-                        ...prev,
-                        paymentMethodMasked: event.target.value
-                      }))
-                    }
-                  />
-                </label>
-                <label>
-                  Fingerprint
-                  <input
-                    type="text"
-                    value={userForm.paymentMethodFingerprint}
-                    onChange={(event) =>
-                      setUserForm((prev) => ({
-                        ...prev,
-                        paymentMethodFingerprint: event.target.value
-                      }))
-                    }
-                  />
-                </label>
-              </div>
-            </details>
 
             {userCreateError && <div className="error">{userCreateError}</div>}
             {userCreateMessage && <div className="success">{userCreateMessage}</div>}
@@ -919,57 +830,60 @@ function App() {
               </label>
             </div>
 
-            <div className="form-grid">
-              <label>
-                IP address
-                <input
-                  type="text"
-                  value={transactionForm.ipAddress}
-                  onChange={(event) =>
-                    setTransactionForm((prev) => ({
-                      ...prev,
-                      ipAddress: event.target.value
-                    }))
-                  }
-                />
-              </label>
-              <label>
-                Device ID
-                <input
-                  type="text"
-                  value={transactionForm.deviceId}
-                  onChange={(event) =>
-                    setTransactionForm((prev) => ({
-                      ...prev,
-                      deviceId: event.target.value
-                    }))
-                  }
-                />
-              </label>
-              <label>
-                Payment method ID
-                <input
-                  type="text"
-                  value={transactionForm.paymentMethodId}
-                  onChange={(event) =>
-                    setTransactionForm((prev) => ({
-                      ...prev,
-                      paymentMethodId: event.target.value
-                    }))
-                  }
-                />
-              </label>
-              <label>
-                Note
-                <input
-                  type="text"
-                  value={transactionForm.note}
-                  onChange={(event) =>
-                    setTransactionForm((prev) => ({ ...prev, note: event.target.value }))
-                  }
-                />
-              </label>
-            </div>
+            <details className="optional-block">
+              <summary>Optional metadata</summary>
+              <div className="form-grid">
+                <label>
+                  IP address
+                  <input
+                    type="text"
+                    value={transactionForm.ipAddress}
+                    onChange={(event) =>
+                      setTransactionForm((prev) => ({
+                        ...prev,
+                        ipAddress: event.target.value
+                      }))
+                    }
+                  />
+                </label>
+                <label>
+                  Device ID
+                  <input
+                    type="text"
+                    value={transactionForm.deviceId}
+                    onChange={(event) =>
+                      setTransactionForm((prev) => ({
+                        ...prev,
+                        deviceId: event.target.value
+                      }))
+                    }
+                  />
+                </label>
+                <label>
+                  Payment method ID
+                  <input
+                    type="text"
+                    value={transactionForm.paymentMethodId}
+                    onChange={(event) =>
+                      setTransactionForm((prev) => ({
+                        ...prev,
+                        paymentMethodId: event.target.value
+                      }))
+                    }
+                  />
+                </label>
+                <label>
+                  Note
+                  <input
+                    type="text"
+                    value={transactionForm.note}
+                    onChange={(event) =>
+                      setTransactionForm((prev) => ({ ...prev, note: event.target.value }))
+                    }
+                  />
+                </label>
+              </div>
+            </details>
 
             {transactionCreateError && <div className="error">{transactionCreateError}</div>}
             {transactionCreateMessage && (
@@ -1108,7 +1022,7 @@ function App() {
           <form className="filter-form" onSubmit={handleApplyTransactionFilters}>
             <input
               type="text"
-              placeholder="Search transaction ID"
+              placeholder="Search transaction ID, user ID, name, or email"
               value={transactionFilters.search}
               onChange={(event) =>
                 setTransactionFilters((prev) => ({

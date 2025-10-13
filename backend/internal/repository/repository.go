@@ -858,7 +858,16 @@ WHERE ($kycStatus = "" OR toUpper(u.kycStatus) = $kycStatus)
 const transactionFilterClause = `
 WHERE ($status = "" OR toUpper(t.status) = $status)
   AND ($type = "" OR toUpper(t.type) = $type)
-  AND ($search = "" OR toLower(t.transactionId) CONTAINS $search)
+  AND (
+    $search = ""
+    OR toLower(t.transactionId) CONTAINS $search
+    OR EXISTS {
+      MATCH (participant:User)-[:PARTICIPATED_IN]->(t)
+      WHERE toLower(participant.userId) CONTAINS $search
+        OR toLower(coalesce(participant.fullName, "")) CONTAINS $search
+        OR toLower(coalesce(participant.email, "")) CONTAINS $search
+    }
+  )
   AND ($minAmount <= 0 OR coalesce(t.amount, 0.0) >= $minAmount)
   AND ($maxAmount <= 0 OR coalesce(t.amount, 0.0) <= $maxAmount)
   AND ($userId = "" OR EXISTS { MATCH (u:User {userId: $userId})-[:PARTICIPATED_IN]->(t) })
