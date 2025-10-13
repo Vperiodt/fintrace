@@ -1,0 +1,242 @@
+[
+  {
+    "id": "TX-DEMO-001",
+    "senderUserId": "USR-DEMO-1",
+    "receiverUserId": "USR-DEMO-2",
+    "amount": 1250.50,
+    "currency": "USD",
+    "type": "TRANSFER",
+    "status": "COMPLETED",
+    "channel": "MOBILE",
+    "ipAddress": "203.0.113.10",
+    "deviceId": "device-alpha",
+    "paymentMethodId": "PM-SHARED-CARD",
+    "timestamp": "2024-04-01T14:05:00Z",
+    "metadata": {
+      "merchantCategory": "REMITTANCE",
+      "note": "Payroll advance"
+    },
+    "createdAt": "2024-04-01T14:00:00Z",
+    "updatedAt": "2024-04-01T14:06:00Z"
+  },
+  {
+    "id": "TX-DEMO-002",
+    "senderUserId": "USR-DEMO-1",
+    "receiverUserId": "USR-DEMO-3",
+    "amount": 840.75,
+    "currency": "USD",
+    "type": "TRANSFER",
+    "status": "COMPLETED",
+    "channel": "WEB",
+    "ipAddress": "203.0.113.10",
+    "deviceId": "device-alpha",
+    "paymentMethodId": "PM-SHARED-CARD",
+    "timestamp": "2024-04-02T09:18:00Z",
+    "metadata": {
+      "merchantCategory": "PAYROLL",
+      "note": "Quarterly bonus"
+    },
+    "createdAt": "2024-04-02T09:15:00Z",
+    "updatedAt": "2024-04-02T09:19:00Z"
+  },
+  {
+    "id": "TX-DEMO-003",
+    "senderUserId": "USR-DEMO-2",
+    "receiverUserId": "USR-DEMO-3",
+    "amount": 420.10,
+    "currency": "USD",
+    "type": "PAYMENT",
+    "status": "COMPLETED",
+    "channel": "POS",
+    "ipAddress": "198.51.100.5",
+    "deviceId": "device-bravo",
+    "paymentMethodId": "PM-DEMO-BOB",
+    "timestamp": "2024-04-03T12:20:00Z",
+    "metadata": {
+      "merchantCategory": "SUPPLIES",
+      "note": "Shared vendor settlement"
+    },
+    "createdAt": "2024-04-03T12:18:00Z",
+    "updatedAt": "2024-04-03T12:21:00Z"
+  },
+  {
+    "id": "TX-DEMO-004",
+    "senderUserId": "USR-DEMO-3",
+    "receiverUserId": "USR-DEMO-4",
+    "amount": 215.00,
+    "currency": "USD",
+    "type": "TRANSFER",
+    "status": "COMPLETED",
+    "channel": "MOBILE",
+    "ipAddress": "198.51.100.5",
+    "deviceId": "device-bravo",
+    "paymentMethodId": "PM-DEMO-CAROL",
+    "timestamp": "2024-04-03T13:45:00Z",
+    "metadata": {
+      "merchantCategory": "EXPENSE",
+      "note": "Shared office utilities"
+    },
+    "createdAt": "2024-04-03T13:42:00Z",
+    "updatedAt": "2024-04-03T13:46:00Z"
+  },
+  {
+    "id": "TX-DEMO-005",
+    "senderUserId": "USR-DEMO-4",
+    "receiverUserId": "USR-DEMO-5",
+    "amount": 335.90,
+    "currency": "USD",
+    "type": "INVOICE",
+    "status": "COMPLETED",
+    "channel": "WEB",
+    "ipAddress": "198.51.100.50",
+    "deviceId": "device-delta",
+    "paymentMethodId": "PM-DEMO-DAVE",
+    "timestamp": "2024-04-04T16:10:00Z",
+    "metadata": {
+      "merchantCategory": "RENT",
+      "note": "Shared studio rent"
+    },
+    "createdAt": "2024-04-04T16:05:00Z",
+    "updatedAt": "2024-04-04T16:12:00Z"
+  },
+  {
+    "id": "TX-DEMO-006",
+    "senderUserId": "USR-DEMO-5",
+    "receiverUserId": "USR-DEMO-2",
+    "amount": 140.25,
+    "currency": "USD",
+    "type": "REFUND",
+    "status": "COMPLETED",
+    "channel": "WEB",
+    "ipAddress": "198.51.100.50",
+    "deviceId": "device-delta",
+    "paymentMethodId": "PM-DEMO-ELLA",
+    "timestamp": "2024-04-04T17:00:00Z",
+    "metadata": {
+      "merchantCategory": "SUBSCRIPTION",
+      "note": "Service credit"
+    },
+    "createdAt": "2024-04-04T16:58:00Z",
+    "updatedAt": "2024-04-04T17:02:00Z"
+  },
+  {
+    "id": "TX-DEMO-007",
+    "senderUserId": "USR-DEMO-6",
+    "receiverUserId": "USR-DEMO-1",
+    "amount": 980.00,
+    "currency": "USD",
+    "type": "TRANSFER",
+    "status": "COMPLETED",
+    "channel": "ATM",
+    "ipAddress": "203.0.113.55",
+    "deviceId": "device-echo",
+    "paymentMethodId": "PM-SHARED-CARD",
+    "timestamp": "2024-04-05T08:40:00Z",
+    "metadata": {
+      "merchantCategory": "REIMBURSEMENT",
+      "note": "Shared corporate card repayment"
+    },
+    "createdAt": "2024-04-05T08:35:00Z",
+    "updatedAt": "2024-04-05T08:42:00Z"
+  },
+  {
+    "id": "TX-DEMO-008",
+    "senderUserId": "USR-DEMO-2",
+    "receiverUserId": "USR-DEMO-6",
+    "amount": 265.75,
+    "currency": "USD",
+    "type": "PAYMENT",
+    "status": "COMPLETED",
+    "channel": "WEB",
+    "ipAddress": "203.0.113.10",
+    "deviceId": "device-gamma",
+    "paymentMethodId": "PM-DEMO-BOB",
+    "timestamp": "2024-04-06T11:20:00Z",
+    "metadata": {
+      "merchantCategory": "CONSULTING",
+      "note": "Shared project settlement"
+    },
+    "createdAt": "2024-04-06T11:16:00Z",
+    "updatedAt": "2024-04-06T11:22:00Z"
+  },
+  {
+    "id": "TX-DEMO-009",
+    "senderUserId": "USR-DEMO-3",
+    "receiverUserId": "USR-DEMO-5",
+    "amount": 510.00,
+    "currency": "USD",
+    "type": "TRANSFER",
+    "status": "COMPLETED",
+    "channel": "MOBILE",
+    "ipAddress": "198.18.0.10",
+    "deviceId": "device-foxtrot",
+    "paymentMethodId": "PM-DEMO-CAROL",
+    "timestamp": "2024-04-07T10:05:00Z",
+    "metadata": {
+      "merchantCategory": "EVENT",
+      "note": "Team event reimbursement"
+    },
+    "createdAt": "2024-04-07T10:00:00Z",
+    "updatedAt": "2024-04-07T10:06:00Z"
+  },
+  {
+    "id": "TX-DEMO-010",
+    "senderUserId": "USR-DEMO-4",
+    "receiverUserId": "USR-DEMO-1",
+    "amount": 610.40,
+    "currency": "USD",
+    "type": "TRANSFER",
+    "status": "COMPLETED",
+    "channel": "WEB",
+    "ipAddress": "198.18.0.10",
+    "deviceId": "device-foxtrot",
+    "paymentMethodId": "PM-DEMO-DAVE",
+    "timestamp": "2024-04-07T11:30:00Z",
+    "metadata": {
+      "merchantCategory": "EVENT",
+      "note": "Shared travel expenses"
+    },
+    "createdAt": "2024-04-07T11:26:00Z",
+    "updatedAt": "2024-04-07T11:32:00Z"
+  },
+  {
+    "id": "TX-DEMO-011",
+    "senderUserId": "USR-DEMO-5",
+    "receiverUserId": "USR-DEMO-6",
+    "amount": 285.00,
+    "currency": "USD",
+    "type": "PAYMENT",
+    "status": "COMPLETED",
+    "channel": "WEB",
+    "ipAddress": "198.51.100.5",
+    "deviceId": "device-golf",
+    "paymentMethodId": "PM-DEMO-ELLA",
+    "timestamp": "2024-04-08T09:50:00Z",
+    "metadata": {
+      "merchantCategory": "SUPPLIES",
+      "note": "Shared vendor purchase"
+    },
+    "createdAt": "2024-04-08T09:46:00Z",
+    "updatedAt": "2024-04-08T09:51:00Z"
+  },
+  {
+    "id": "TX-DEMO-012",
+    "senderUserId": "USR-DEMO-6",
+    "receiverUserId": "USR-DEMO-3",
+    "amount": 330.60,
+    "currency": "USD",
+    "type": "TRANSFER",
+    "status": "COMPLETED",
+    "channel": "MOBILE",
+    "ipAddress": "198.51.100.5",
+    "deviceId": "device-golf",
+    "paymentMethodId": "PM-SHARED-CARD",
+    "timestamp": "2024-04-08T10:30:00Z",
+    "metadata": {
+      "merchantCategory": "SERVICES",
+      "note": "Recurring retainer payment"
+    },
+    "createdAt": "2024-04-08T10:26:00Z",
+    "updatedAt": "2024-04-08T10:31:00Z"
+  }
+]

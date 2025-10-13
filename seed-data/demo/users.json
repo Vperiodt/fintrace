@@ -1,0 +1,188 @@
+[
+  {
+    "id": "USR-DEMO-1",
+    "fullName": "Alice Chen",
+    "email": "alice@fintrace.io",
+    "phone": "+155500001",
+    "address": {
+      "line1": "101 Maple Ave",
+      "line2": "",
+      "city": "Seattle",
+      "state": "WA",
+      "postalCode": "98101",
+      "country": "US"
+    },
+    "dateOfBirth": "1987-06-12T00:00:00Z",
+    "kycStatus": "VERIFIED",
+    "riskScore": 0.32,
+    "paymentMethods": [
+      {
+        "paymentMethodId": "PM-SHARED-CARD",
+        "methodType": "CARD",
+        "provider": "VISA",
+        "masked": "**** **** **** 4242",
+        "fingerprint": "fp-shared-card",
+        "firstUsedAt": "2023-05-01T00:00:00Z",
+        "lastUsedAt": "2024-02-15T00:00:00Z"
+      }
+    ],
+    "attributes": [],
+    "createdAt": "2024-03-01T10:00:00Z",
+    "updatedAt": "2024-03-05T10:00:00Z"
+  },
+  {
+    "id": "USR-DEMO-2",
+    "fullName": "Bob Singh",
+    "email": "shared.contact@fintrace.io",
+    "phone": "+155500002",
+    "address": {
+      "line1": "88 Harbor Way",
+      "line2": "Suite 400",
+      "city": "Seattle",
+      "state": "WA",
+      "postalCode": "98121",
+      "country": "US"
+    },
+    "dateOfBirth": "1991-02-04T00:00:00Z",
+    "kycStatus": "REVIEW",
+    "riskScore": 0.45,
+    "paymentMethods": [
+      {
+        "paymentMethodId": "PM-DEMO-BOB",
+        "methodType": "CARD",
+        "provider": "MASTERCARD",
+        "masked": "**** **** **** 7711",
+        "fingerprint": "fp-bob-unique",
+        "firstUsedAt": "2023-09-15T00:00:00Z",
+        "lastUsedAt": "2024-04-01T00:00:00Z"
+      }
+    ],
+    "attributes": [],
+    "createdAt": "2024-03-02T12:00:00Z",
+    "updatedAt": "2024-03-06T09:00:00Z"
+  },
+  {
+    "id": "USR-DEMO-3",
+    "fullName": "Carol Perez",
+    "email": "shared.contact@fintrace.io",
+    "phone": "+15550123",
+    "address": {
+      "line1": "220 King St",
+      "line2": "Apt 9",
+      "city": "San Francisco",
+      "state": "CA",
+      "postalCode": "94107",
+      "country": "US"
+    },
+    "dateOfBirth": "1990-11-18T00:00:00Z",
+    "kycStatus": "VERIFIED",
+    "riskScore": 0.26,
+    "paymentMethods": [
+      {
+        "paymentMethodId": "PM-DEMO-CAROL",
+        "methodType": "CARD",
+        "provider": "AMEX",
+        "masked": "**** **** **** 3001",
+        "fingerprint": "fp-carol-unique",
+        "firstUsedAt": "2023-06-01T00:00:00Z",
+        "lastUsedAt": "2024-03-28T00:00:00Z"
+      }
+    ],
+    "attributes": [],
+    "createdAt": "2024-03-03T08:00:00Z",
+    "updatedAt": "2024-03-07T08:30:00Z"
+  },
+  {
+    "id": "USR-DEMO-4",
+    "fullName": "David Okoro",
+    "email": "david@fintrace.io",
+    "phone": "+15550123",
+    "address": {
+      "line1": "450 Union Sq",
+      "line2": "Floor 2",
+      "city": "San Francisco",
+      "state": "CA",
+      "postalCode": "94108",
+      "country": "US"
+    },
+    "dateOfBirth": "1985-04-07T00:00:00Z",
+    "kycStatus": "VERIFIED",
+    "riskScore": 0.51,
+    "paymentMethods": [
+      {
+        "paymentMethodId": "PM-DEMO-DAVE",
+        "methodType": "BANK",
+        "provider": "CHASE",
+        "masked": "****5678",
+        "fingerprint": "fp-dave-unique",
+        "firstUsedAt": "2022-12-10T00:00:00Z",
+        "lastUsedAt": "2024-03-30T00:00:00Z"
+      }
+    ],
+    "attributes": [],
+    "createdAt": "2024-03-04T11:00:00Z",
+    "updatedAt": "2024-03-08T09:45:00Z"
+  },
+  {
+    "id": "USR-DEMO-5",
+    "fullName": "Ella Johnson",
+    "email": "ella@fintrace.io",
+    "phone": "+155500005",
+    "address": {
+      "line1": "450 Union Sq",
+      "line2": "Floor 2",
+      "city": "San Francisco",
+      "state": "CA",
+      "postalCode": "94108",
+      "country": "US"
+    },
+    "dateOfBirth": "1993-01-21T00:00:00Z",
+    "kycStatus": "REVIEW",
+    "riskScore": 0.62,
+    "paymentMethods": [
+      {
+        "paymentMethodId": "PM-DEMO-ELLA",
+        "methodType": "CARD",
+        "provider": "VISA",
+        "masked": "**** **** **** 8844",
+        "fingerprint": "fp-ella-unique",
+        "firstUsedAt": "2023-02-10T00:00:00Z",
+        "lastUsedAt": "2024-03-29T00:00:00Z"
+      }
+    ],
+    "attributes": [],
+    "createdAt": "2024-03-04T12:30:00Z",
+    "updatedAt": "2024-03-09T07:15:00Z"
+  },
+  {
+    "id": "USR-DEMO-6",
+    "fullName": "Lian Wu",
+    "email": "lian@fintrace.io",
+    "phone": "+155500006",
+    "address": {
+      "line1": "12 Elm Rd",
+      "line2": "",
+      "city": "Portland",
+      "state": "OR",
+      "postalCode": "97205",
+      "country": "US"
+    },
+    "dateOfBirth": "1989-09-30T00:00:00Z",
+    "kycStatus": "VERIFIED",
+    "riskScore": 0.29,
+    "paymentMethods": [
+      {
+        "paymentMethodId": "PM-SHARED-CARD",
+        "methodType": "CARD",
+        "provider": "VISA",
+        "masked": "**** **** **** 4242",
+        "fingerprint": "fp-shared-card",
+        "firstUsedAt": "2023-10-05T00:00:00Z",
+        "lastUsedAt": "2024-03-27T00:00:00Z"
+      }
+    ],
+    "attributes": [],
+    "createdAt": "2024-03-05T10:00:00Z",
+    "updatedAt": "2024-03-10T10:15:00Z"
+  }
+]

@@ -82,6 +82,29 @@ services:
     profiles:
       - seed
 
+  ingest-demo:
+    build:
+      context: ./backend
+    container_name: fintrace-ingest-demo
+    entrypoint: ["/app/ingest"]
+    command:
+      - "--dataset-dir"
+      - "/seed-data/demo"
+      - "--workers"
+      - "1"
+    depends_on:
+      - neo4j
+    environment:
+      GRAPH_URI: bolt://neo4j:7687
+      GRAPH_USERNAME: neo4j
+      GRAPH_PASSWORD: StrongPass123
+      GRAPH_DATABASE: neo4j
+      LOG_LEVEL: info
+    volumes:
+      - ./seed-data/demo:/seed-data/demo
+    profiles:
+      - demo
+
 volumes:
   neo4j-data:
   neo4j-logs:

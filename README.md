@@ -32,13 +32,22 @@ docker compose --profile seed run --rm datagen
 
 Seed files will land in `./seed-data`.
 
-```bash
-docker compose --profile seed run --rm ingest
-```
-
 Then ingest the dataset into Neo4j. The loader retries transient deadlocks automatically, but for a guaranteed smooth import start with a single worker:
 
 ```bash
+docker compose --profile seed run --rm ingest --dataset-dir /seed-data --workers 1
+```
+
+### Quick demo vs. full dataset
+
+If you want a tiny dataset that highlights every relationship type without waiting for the full import, load the curated demo files instead:
+
+```bash
+# 6 users, 12 transactions (loads in seconds)
+docker compose --profile demo run --rm ingest-demo
+
+# Full 10k / 100k dataset
+docker compose --profile seed run --rm datagen
 docker compose --profile seed run --rm ingest --dataset-dir /seed-data --workers 1
 ```
 
