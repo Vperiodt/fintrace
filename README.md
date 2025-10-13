@@ -69,6 +69,8 @@ curl -s "http://localhost:8080/relationships/user/USR-DEMO-1" | jq
 curl -s "http://localhost:8080/relationships/transaction/TX-DEMO-1" | jq
 ```
 
+> The create/update endpoints (`POST /users`, `POST /transactions`) are API-only; there isn’t a UI form. Use `curl`, Postman, or any HTTP client to send JSON payloads.
+
 ## API Reference (Summary)
 
 | Method | Endpoint | Description |
@@ -79,8 +81,5 @@ curl -s "http://localhost:8080/relationships/transaction/TX-DEMO-1" | jq
 | `GET`  | `/transactions` | Paginated list; filters on status, type, channel, amount, time window |
 | `GET`  | `/relationships/user/{id}` | User-centric relationships |
 | `GET`  | `/relationships/transaction/{id}` | Transaction-centric relationships |
-| `GET`  | `/analytics/shortest-path` | Shortest path between two user IDs |
-| `GET`  | `/export/users` | Export users (`format=json|csv`) |
-| `GET`  | `/export/transactions` | Export transactions (`format=json|csv`) |
 
 All list endpoints support `page`, `pageSize` (<=200), `sortField`, and `sortOrder`.

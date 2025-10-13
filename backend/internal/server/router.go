@@ -44,9 +44,6 @@ func NewRouter(logger *slog.Logger, deps RouterDependencies) http.Handler {
 		mux.HandleFunc("/transactions", deps.API.handleTransactions)
 		mux.HandleFunc("/relationships/user/", deps.API.handleUserRelationships)
 		mux.HandleFunc("/relationships/transaction/", deps.API.handleTransactionRelationships)
-		mux.HandleFunc("/analytics/shortest-path", deps.API.handleShortestPath)
-		mux.HandleFunc("/export/users", deps.API.handleExportUsers)
-		mux.HandleFunc("/export/transactions", deps.API.handleExportTransactions)
 	}
 
 	return loggingMiddleware(logger, mux)
