@@ -2,7 +2,7 @@
 
 ## Overview
 
-Fintrace is a full-stack prototype for analysing relationships between users and transactions in a financial graph. The backend exposes REST APIs to ingest data, detect direct and indirect relationships. The frontend renders searchable lists and an interactive graph explorer powered by Cytoscape. Synthetic data generation and container orchestration are provided to support rapid demos with 100k+ transactions.
+Fintrace is a graph analytics stack: a Go REST backend wiring users and transactions into Neo4j with derived relationships, a React/Cytoscape front-end for interactive exploration, and Dockerized tooling—including a synthetic data generator—to spin up 10k/100k-scale demos quickly.
 
 ## Getting Started
 
