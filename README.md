@@ -51,21 +51,10 @@ docker compose --profile seed run --rm datagen
 docker compose --profile seed run --rm ingest --dataset-dir /seed-data --workers 1
 ```
 
-### Testing the API quickly
+<img width="1861" height="738" alt="image" src="https://github.com/user-attachments/assets/fbd725ef-9ed5-420d-9658-2d8c26ef4247" />
+<img width="1831" height="738" alt="image" src="https://github.com/user-attachments/assets/1af54d67-6abf-447c-b4da-a08cb9428176" />
+<img width="1831" height="931" alt="image" src="https://github.com/user-attachments/assets/3a3aec41-f775-4da7-a84d-9b6c9fca2c43" />
+<img width="1831" height="890" alt="image" src="https://github.com/user-attachments/assets/6b43197b-dfe3-4a1e-b871-3ad8ce5bfb8f" />
 
-With the stack running (`docker compose up backend frontend`), you can smoke test the REST endpoints with `curl`:
 
-```bash
-# Users list
-curl -s "http://localhost:8080/users?page=1&pageSize=5" | jq
-
-# Transactions filtered by status
-curl -s "http://localhost:8080/transactions?page=1&pageSize=5&status=COMPLETED" | jq
-
-# User relationships
-curl -s "http://localhost:8080/relationships/user/USR-DEMO-1" | jq
-
-# Transaction relationships
-curl -s "http://localhost:8080/relationships/transaction/TX-DEMO-1" | jq
-```
 
