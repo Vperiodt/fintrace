@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/vanshika/fintrace/backend/internal/config"
@@ -46,8 +47,10 @@ func main() {
 	apiHandlers := server.NewAPIHandlers(logger, relationshipService)
 
 	router := server.NewRouter(logger, server.RouterDependencies{
-		Health: server.GraphHealthService{Client: graphClient},
-		API:    apiHandlers,
+		Health:           server.GraphHealthService{Client: graphClient},
+		API:              apiHandlers,
+		AllowedOrigins:   parseAllowedOrigins(cfg.HTTP.AllowedOriginsCSV),
+		AllowCredentials: true,
 	})
 
 	srv := server.New(logger, cfg.HTTP, router)
@@ -91,4 +94,20 @@ func buildGraphClient(ctx context.Context, logger *slog.Logger, cfg config.Confi
 		MaxConnections: cfg.Graph.MaxConnections,
 	}
 	return graph.NewNeo4jClient(ctx, opts)
+}
+
+func parseAllowedOrigins(csv string) []string {
+	if csv == "" {
+		return nil
+	}
+	parts := strings.Split(csv, ",")
+	var origins []string
+	for _, part := range parts {
+		origin := strings.TrimSpace(part)
+		if origin == "" {
+			continue
+		}
+		origins = append(origins, origin)
+	}
+	return origins
 }

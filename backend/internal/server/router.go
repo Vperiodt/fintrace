@@ -5,13 +5,16 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 )
 
 // RouterDependencies collects handler dependencies.
 type RouterDependencies struct {
-	Health HealthService
-	API    *APIHandlers
+	Health           HealthService
+	API              *APIHandlers
+	AllowedOrigins   []string
+	AllowCredentials bool
 }
 
 // NewRouter wires the HTTP routes exposed by the backend API.
@@ -46,7 +49,11 @@ func NewRouter(logger *slog.Logger, deps RouterDependencies) http.Handler {
 		mux.HandleFunc("/relationships/transaction/", deps.API.handleTransactionRelationships)
 	}
 
-	return loggingMiddleware(logger, mux)
+	handler := http.Handler(loggingMiddleware(logger, mux))
+	if len(deps.AllowedOrigins) > 0 {
+		handler = corsMiddleware(deps.AllowedOrigins, deps.AllowCredentials)(handler)
+	}
+	return handler
 }
 
 func loggingMiddleware(logger *slog.Logger, next http.Handler) http.Handler {
@@ -80,4 +87,50 @@ type responseRecorder struct {
 func (r *responseRecorder) WriteHeader(status int) {
 	r.status = status
 	r.ResponseWriter.WriteHeader(status)
+}
+
+func corsMiddleware(allowedOrigins []string, allowCredentials bool) func(http.Handler) http.Handler {
+	normalized := make(map[string]struct{}, len(allowedOrigins))
+	for _, origin := range allowedOrigins {
+		origin = strings.TrimSpace(origin)
+		if origin == "" {
+			continue
+		}
+		normalized[origin] = struct{}{}
+	}
+
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			origin := r.Header.Get("Origin")
+			if origin == "" || (!containsOrigin(normalized, origin) && !containsOrigin(normalized, "*")) {
+				if r.Method == http.MethodOptions {
+					// Reject bare pre-flight if origin is not whitelisted.
+					w.WriteHeader(http.StatusForbidden)
+					return
+				}
+				next.ServeHTTP(w, r)
+				return
+			}
+
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			w.Header().Add("Vary", "Origin")
+			if allowCredentials {
+				w.Header().Set("Access-Control-Allow-Credentials", "true")
+			}
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+
+			if r.Method == http.MethodOptions {
+				w.WriteHeader(http.StatusNoContent)
+				return
+			}
+
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+func containsOrigin(set map[string]struct{}, origin string) bool {
+	_, ok := set[origin]
+	return ok
 }

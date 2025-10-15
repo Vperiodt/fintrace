@@ -119,7 +119,11 @@ func Load() (Config, error) {
 	}
 
 	cfg.HTTP.MetricsEnabled = parseBoolWithDefault("SERVER_METRICS_ENABLED", false)
-	cfg.HTTP.AllowedOriginsCSV = os.Getenv("SERVER_ALLOWED_ORIGINS")
+	allowedOriginsCSV := os.Getenv("SERVER_ALLOWED_ORIGINS")
+	if allowedOriginsCSV == "" {
+		allowedOriginsCSV = os.Getenv("CORS_ALLOW_ORIGINS")
+	}
+	cfg.HTTP.AllowedOriginsCSV = allowedOriginsCSV
 
 	return cfg, nil
 }
