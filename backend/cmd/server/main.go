@@ -82,8 +82,7 @@ func main() {
 
 func buildGraphClient(ctx context.Context, logger *slog.Logger, cfg config.Config) (graph.Client, error) {
 	if cfg.Graph.URI == "" {
-		logger.Warn("graph URI not configured, falling back to in-memory graph client (development mode)")
-		return graph.NewMemoryClient(), nil
+		return nil, graph.ErrMissingURI
 	}
 
 	opts := graph.Options{

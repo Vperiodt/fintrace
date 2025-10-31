@@ -18,9 +18,6 @@ type GraphRepository interface {
 	FetchTransactionRelationships(ctx context.Context, transactionID string) (domain.TransactionRelationships, error)
 	ListUsers(ctx context.Context, opts repository.ListUsersOptions) (domain.UserListResult, error)
 	ListTransactions(ctx context.Context, opts repository.ListTransactionsOptions) (domain.TransactionListResult, error)
-	ShortestPathBetweenUsers(ctx context.Context, sourceID, targetID string) (domain.ShortestPath, error)
-	ExportUsers(ctx context.Context) ([]domain.UserSummary, error)
-	ExportTransactions(ctx context.Context) ([]domain.TransactionSummary, error)
 }
 
 // AttributeGenerator handles attribute extraction and hashing.
@@ -290,23 +287,6 @@ func (s *RelationshipService) GetUserRelationships(ctx context.Context, userID s
 // GetTransactionRelationships fetches relationship data for the provided transaction ID.
 func (s *RelationshipService) GetTransactionRelationships(ctx context.Context, txID string) (domain.TransactionRelationships, error) {
 	return s.repo.FetchTransactionRelationships(ctx, txID)
-}
-
-func (s *RelationshipService) GetShortestPathBetweenUsers(ctx context.Context, sourceID, targetID string) (domain.ShortestPath, error) {
-	sourceID = sanitizeString(sourceID)
-	targetID = sanitizeString(targetID)
-	if sourceID == "" || targetID == "" {
-		return domain.ShortestPath{}, fmt.Errorf("sourceUserId and targetUserId are required")
-	}
-	return s.repo.ShortestPathBetweenUsers(ctx, sourceID, targetID)
-}
-
-func (s *RelationshipService) ExportUsers(ctx context.Context) ([]domain.UserSummary, error) {
-	return s.repo.ExportUsers(ctx)
-}
-
-func (s *RelationshipService) ExportTransactions(ctx context.Context) ([]domain.TransactionSummary, error) {
-	return s.repo.ExportTransactions(ctx)
 }
 
 func normalizePagination(page, pageSize int) (int, int) {

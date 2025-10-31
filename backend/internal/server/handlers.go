@@ -1,10 +1,8 @@
 package server
 
 import (
-	"encoding/csv"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -155,173 +153,6 @@ func (h *APIHandlers) handleTransactionRelationships(w http.ResponseWriter, r *h
 	}
 
 	respondJSON(w, http.StatusOK, response)
-}
-
-func (h *APIHandlers) handleShortestPath(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		methodNotAllowed(w, http.MethodGet)
-		return
-	}
-	sourceID := strings.TrimSpace(r.URL.Query().Get("sourceUserId"))
-	targetID := strings.TrimSpace(r.URL.Query().Get("targetUserId"))
-	if sourceID == "" || targetID == "" {
-		writeError(w, http.StatusBadRequest, "sourceUserId and targetUserId are required")
-		return
-	}
-
-	path, err := h.service.GetShortestPathBetweenUsers(r.Context(), sourceID, targetID)
-	if err != nil {
-		h.logger.Error("failed to compute shortest path", "error", err, "sourceUserId", sourceID, "targetUserId", targetID)
-		writeError(w, http.StatusInternalServerError, "failed to compute shortest path")
-		return
-	}
-
-	resp := shortestPathResponse{
-		SourceUserID: path.SourceUserID,
-		TargetUserID: path.TargetUserID,
-		Hops:         path.Hops,
-	}
-	for _, node := range path.Nodes {
-		resp.Nodes = append(resp.Nodes, pathNodeResponse{
-			ID:     node.ID,
-			Type:   node.Type,
-			Label:  node.Label,
-			Weight: node.Weight,
-		})
-	}
-	for _, edge := range path.Edges {
-		resp.Edges = append(resp.Edges, pathEdgeResponse{
-			Type:   edge.Type,
-			Source: edge.Source,
-			Target: edge.Target,
-			Label:  edge.Label,
-			Weight: edge.Weight,
-		})
-	}
-
-	respondJSON(w, http.StatusOK, resp)
-}
-
-func (h *APIHandlers) handleExportUsers(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		methodNotAllowed(w, http.MethodGet)
-		return
-	}
-
-	format := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("format")))
-	if format == "" {
-		format = "json"
-	}
-
-	users, err := h.service.ExportUsers(r.Context())
-	if err != nil {
-		h.logger.Error("failed to export users", "error", err)
-		writeError(w, http.StatusInternalServerError, "failed to export users")
-		return
-	}
-
-	switch format {
-	case "csv":
-		filename := fmt.Sprintf("users-%d.csv", time.Now().Unix())
-		w.Header().Set("Content-Type", "text/csv")
-		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filename))
-		writer := csv.NewWriter(w)
-		header := []string{"userId", "fullName", "email", "phone", "kycStatus", "riskScore", "createdAt", "updatedAt"}
-		if err := writer.Write(header); err != nil {
-			h.logger.Error("failed to write csv header", "error", err)
-			writeError(w, http.StatusInternalServerError, "failed to write csv")
-			return
-		}
-		for _, user := range users {
-			record := []string{
-				user.ID,
-				user.FullName,
-				user.Email,
-				user.Phone,
-				user.KYCStatus,
-				fmt.Sprintf("%.4f", user.RiskScore),
-				formatTime(user.CreatedAt),
-				formatTime(user.UpdatedAt),
-			}
-			if err := writer.Write(record); err != nil {
-				h.logger.Error("failed to write csv record", "error", err)
-				writeError(w, http.StatusInternalServerError, "failed to write csv")
-				return
-			}
-		}
-		writer.Flush()
-		if err := writer.Error(); err != nil {
-			h.logger.Error("csv flush error", "error", err)
-		}
-	default:
-		respondJSON(w, http.StatusOK, map[string]any{
-			"items": users,
-		})
-	}
-}
-
-func (h *APIHandlers) handleExportTransactions(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		methodNotAllowed(w, http.MethodGet)
-		return
-	}
-
-	format := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("format")))
-	if format == "" {
-		format = "json"
-	}
-
-	txs, err := h.service.ExportTransactions(r.Context())
-	if err != nil {
-		h.logger.Error("failed to export transactions", "error", err)
-		writeError(w, http.StatusInternalServerError, "failed to export transactions")
-		return
-	}
-
-	switch format {
-	case "csv":
-		filename := fmt.Sprintf("transactions-%d.csv", time.Now().Unix())
-		w.Header().Set("Content-Type", "text/csv")
-		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filename))
-		writer := csv.NewWriter(w)
-		header := []string{
-			"transactionId", "senderUserId", "receiverUserId", "amount", "currency",
-			"type", "status", "channel", "timestamp", "createdAt", "updatedAt",
-		}
-		if err := writer.Write(header); err != nil {
-			h.logger.Error("failed to write csv header", "error", err)
-			writeError(w, http.StatusInternalServerError, "failed to write csv")
-			return
-		}
-		for _, tx := range txs {
-			record := []string{
-				tx.ID,
-				tx.SenderUserID,
-				tx.ReceiverUserID,
-				fmt.Sprintf("%.2f", tx.Amount),
-				tx.Currency,
-				tx.Type,
-				tx.Status,
-				tx.Channel,
-				formatTime(tx.Timestamp),
-				formatTime(tx.CreatedAt),
-				formatTime(tx.UpdatedAt),
-			}
-			if err := writer.Write(record); err != nil {
-				h.logger.Error("failed to write csv record", "error", err)
-				writeError(w, http.StatusInternalServerError, "failed to write csv")
-				return
-			}
-		}
-		writer.Flush()
-		if err := writer.Error(); err != nil {
-			h.logger.Error("csv flush error", "error", err)
-		}
-	default:
-		respondJSON(w, http.StatusOK, map[string]any{
-			"items": txs,
-		})
-	}
 }
 
 func (h *APIHandlers) createOrUpdateUser(w http.ResponseWriter, r *http.Request) {
@@ -717,29 +548,6 @@ type linkedTransaction struct {
 type statusResponse struct {
 	Status string `json:"status"`
 	ID     string `json:"id"`
-}
-
-type shortestPathResponse struct {
-	SourceUserID string             `json:"sourceUserId"`
-	TargetUserID string             `json:"targetUserId"`
-	Hops         int                `json:"hops"`
-	Nodes        []pathNodeResponse `json:"nodes"`
-	Edges        []pathEdgeResponse `json:"edges"`
-}
-
-type pathNodeResponse struct {
-	ID     string  `json:"id"`
-	Type   string  `json:"type"`
-	Label  string  `json:"label"`
-	Weight float64 `json:"weight"`
-}
-
-type pathEdgeResponse struct {
-	Type   string  `json:"type"`
-	Source string  `json:"source"`
-	Target string  `json:"target"`
-	Label  string  `json:"label"`
-	Weight float64 `json:"weight"`
 }
 
 // --- Helpers ---
